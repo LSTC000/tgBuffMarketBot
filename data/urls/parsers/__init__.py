@@ -1,0 +1,4 @@
+__all__ = ['BUFF_MARKET_DATA_JSON_URL', 'BUFF_GOODS_URL']
+
+
+from .parsers_urls import BUFF_MARKET_DATA_JSON_URL, BUFF_GOODS_URL
