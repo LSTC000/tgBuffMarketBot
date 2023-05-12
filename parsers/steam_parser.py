@@ -11,10 +11,10 @@ import requests
 import numpy as np
 
 
-def steam_parser(steam_market_url: str, steam_resample: str) -> Union[float, None]:
+def steam_parser(steam_market_url: str, steam_resample: int) -> Union[float, None]:
     '''
     :param steam_market_url: Ссылка на предмет в steam market.
-    :param steam_resample: Метод группировки в steam market: 'all_time', 'last_week', 'last_month'.
+    :param steam_resample: Период за который мы ищем среднюю стоимость предмета на steam market.
     :return: Средняя цена предмета в steam market за указанный период (steam_resample). В случае ошибки - None.
     '''
 
@@ -28,12 +28,9 @@ def steam_parser(steam_market_url: str, steam_resample: str) -> Union[float, Non
     try:
         m = re.search(r'var line1=(.+);', response.text)
         data = np.array(steam_data_prepare(m.group(1)))
-        len_data = len(data)
 
-        if steam_resample == 'last_week' and len_data >= 7:
-            data = data[-1:-8:-1]
-        if steam_resample == 'last_month' and len_data >= 30:
-            data = data[-1:-31:-1]
+        if len(data) >= steam_resample:
+            data = data[-1:-steam_resample-1:-1]
 
         return data.mean()
     except Exception as ex:
