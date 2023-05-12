@@ -1,4 +1,4 @@
-__all__ = ['HEADERS']
+__all__ = ['HEADERS', 'BUFF_SLEEP_TIME']
 
 
-from .parsers_config import HEADERS
+from .parsers_config import HEADERS, BUFF_SLEEP_TIME

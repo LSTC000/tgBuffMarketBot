@@ -6,23 +6,24 @@ from data.config import HEADERS
 
 from utils import steam_data_prepare
 
-import requests
+import httpx
 
 import numpy as np
 
 
-def steam_parser(steam_market_url: str, steam_resample: int) -> Union[float, None]:
+async def steam_parser(user_id: int, steam_market_url: str, steam_resample: int) -> Union[float, None]:
     '''
+    :param user_id: Телеграм user id.
     :param steam_market_url: Ссылка на предмет в steam market.
     :param steam_resample: Период за который мы ищем среднюю стоимость предмета на steam market.
     :return: Средняя цена предмета в steam market за указанный период (steam_resample). В случае ошибки - None.
     '''
 
     try:
-        response = requests.get(headers=HEADERS, url=steam_market_url)
-        response.raise_for_status()
-    except Exception as ex:
-        print(ex)
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url=steam_market_url, headers=HEADERS, params={'chat_id': user_id})
+            response.raise_for_status()
+    except (httpx.HTTPError, httpx.RequestError, httpx.TimeoutException):
         return None
 
     try:
@@ -33,6 +34,5 @@ def steam_parser(steam_market_url: str, steam_resample: int) -> Union[float, Non
             data = data[-1:-steam_resample-1:-1]
 
         return data.mean()
-    except Exception as ex:
-        print(ex)
+    except AttributeError:
         return None

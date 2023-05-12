@@ -5,3 +5,5 @@ ua = UserAgent()
 HEADERS = {
     'User-Agent': ua.random
 }
+
+BUFF_SLEEP_TIME = 3
