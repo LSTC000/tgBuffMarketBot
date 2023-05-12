@@ -1,0 +1,4 @@
+CHANGE_PRICE_THRESHOLD_IKB_MESSAGE = 'change_price_threshold'
+CHANGE_BUFF_PERCENT_THRESHOLD_IKB_MESSAGE = 'change_buff_percent_threshold'
+CHANGE_STEAM_PERCENT_THRESHOLD_IKB_MESSAGE = 'change_steam_percent_threshold'
+CHANGE_STEAM_RESAMPLE_IKB_MESSAGE = 'change_steam_resample'

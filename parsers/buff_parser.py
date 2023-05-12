@@ -6,6 +6,8 @@ from data.urls import BUFF_MARKET_JSON_URL, BUFF_GOODS_URL
 
 from parsers.steam_parser import steam_parser
 
+from utils import create_goods_report
+
 from loader import bot, items_cache
 
 import httpx
@@ -78,7 +80,13 @@ async def buff_parser(
             buff_goods_url = BUFF_GOODS_URL.format(item_id)
             items_cache[item_id] = item
 
-            await bot.send_message(chat_id=user_id, text=buff_goods_url)
+            await bot.send_message(chat_id=user_id, text=create_goods_report(
+                steam_price_cny=steam_price_cny,
+                sell_min_price=sell_min_price,
+                steam_market_mean_price=steam_market_mean_price,
+                steam_resample=steam_resample,
+                buff_goods_url=buff_goods_url
+            ))
         except (AttributeError, KeyError):
             pass
 

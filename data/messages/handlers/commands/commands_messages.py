@@ -2,6 +2,7 @@ START_COMMAND_MESSAGE = 'Привет, я бот :)'
 START_PARSE_COMMAND_MESSAGE = 'Парсер запущен'
 STOP_PARSE_COMMAND_MESSAGE = 'Парсер остановлен'
 CHANGE_SETTINGS_COMMAND_MESSAGE = 'Выберите, что хотите изменить'
+NEED_STOP_PARSE_MESSAGE = 'Для изменения настроек нужно сначала остановить парсер'
 
 START_SHORT_COMMAND_MESSAGE = 'перезапуск бота'
 START_PARSE_SHORT_COMMAND_MESSAGE = 'запустить парсер'

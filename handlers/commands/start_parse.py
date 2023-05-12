@@ -14,6 +14,8 @@ from data.messages import START_PARSE_COMMAND_MESSAGE, STOP_PARSE_COMMAND_MESSAG
 
 from parsers import buff_parser
 
+from functions import keyboards_clear
+
 from loader import dp, bot
 
 from aiogram import types
@@ -24,18 +26,23 @@ from aiogram.dispatcher import FSMContext
 async def start_parse_command(message: types.Message, state: FSMContext) -> None:
     user_id = message.from_user.id
 
+    await keyboards_clear(user_id=user_id, state=state)
     await bot.send_message(chat_id=user_id, text=START_PARSE_COMMAND_MESSAGE)
 
     async with state.proxy() as data:
         data[START_PARSE_KEY] = True
+        price_threshold = data[PRICE_THRESHOLD_KEY]
+        buff_percent_threshold = data[BUFF_PERCENT_THRESHOLD_KEY]
+        steam_percent_threshold = data[STEAM_PERCENT_THRESHOLD_KEY]
+        steam_resample = data[STEAM_RESAMPLE_KEY]
 
     while True:
         stop = await buff_parser(
             user_id=user_id,
-            price_threshold=data[PRICE_THRESHOLD_KEY],
-            buff_percent_threshold=data[BUFF_PERCENT_THRESHOLD_KEY],
-            steam_percent_threshold=data[STEAM_PERCENT_THRESHOLD_KEY],
-            steam_resample=data[STEAM_RESAMPLE_KEY],
+            price_threshold=price_threshold,
+            buff_percent_threshold=buff_percent_threshold,
+            steam_percent_threshold=steam_percent_threshold,
+            steam_resample=steam_resample,
             state=state
         )
 

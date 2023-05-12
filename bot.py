@@ -6,7 +6,8 @@ from loader import dp, bot, logger
 
 from handlers import (
     register_commands,
-    set_default_commands
+    set_default_commands,
+    register_change_settings
 )
 
 from aiogram import Bot, Dispatcher
@@ -14,6 +15,7 @@ from aiogram.utils import executor
 
 
 def register_all_handlers(dispatcher: Dispatcher):
+    register_change_settings(dispatcher)
     register_commands(dispatcher)
 
 
