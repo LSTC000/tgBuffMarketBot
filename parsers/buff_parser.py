@@ -13,7 +13,7 @@ from loader import bot, items_cache
 import httpx
 
 from aiogram.dispatcher.storage import FSMContext
-from data.redis import START_PARSE_KEY
+from data.redis import START_PARSE_REDIS_KEY
 
 
 async def buff_parser(
@@ -49,7 +49,7 @@ async def buff_parser(
 
     for item in items:
         async with state.proxy() as data:
-            if not data[START_PARSE_KEY]:
+            if not data[START_PARSE_REDIS_KEY]:
                 return True
 
         try:

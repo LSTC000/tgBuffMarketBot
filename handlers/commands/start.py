@@ -1,9 +1,9 @@
 from data.redis import (
-    PRICE_THRESHOLD_KEY,
-    BUFF_PERCENT_THRESHOLD_KEY,
-    STEAM_PERCENT_THRESHOLD_KEY,
-    STEAM_RESAMPLE_KEY,
-    START_PARSE_KEY
+    PRICE_THRESHOLD_REDIS_KEY,
+    BUFF_PERCENT_THRESHOLD_REDIS_KEY,
+    STEAM_PERCENT_THRESHOLD_REDIS_KEY,
+    STEAM_RESAMPLE_REDIS_KEY,
+    START_PARSE_REDIS_KEY
 )
 
 from data.messages import START_COMMAND_MESSAGE
@@ -25,10 +25,10 @@ async def start_command(message: types.Message, state: FSMContext) -> None:
     async with state.proxy() as data:
         if data:
             data.clear()
-        data[PRICE_THRESHOLD_KEY] = 0.0
-        data[BUFF_PERCENT_THRESHOLD_KEY] = 0.0
-        data[STEAM_PERCENT_THRESHOLD_KEY] = 0.0
-        data[STEAM_RESAMPLE_KEY] = 7
-        data[START_PARSE_KEY] = False
+        data[PRICE_THRESHOLD_REDIS_KEY] = 0.0
+        data[BUFF_PERCENT_THRESHOLD_REDIS_KEY] = 0.0
+        data[STEAM_PERCENT_THRESHOLD_REDIS_KEY] = 0.0
+        data[STEAM_RESAMPLE_REDIS_KEY] = 7
+        data[START_PARSE_REDIS_KEY] = False
 
     await bot.send_message(chat_id=user_id, text=START_COMMAND_MESSAGE)

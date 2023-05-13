@@ -6,7 +6,7 @@ def create_goods_report(
     buff_goods_url: str
 ) -> str:
     '''
-    :param steam_price_cny: Оценочная стоимость.
+    :param steam_price_cny: Ориентировочная стоимость.
     :param sell_min_price: Наименьшая доступная цена.
     :param steam_market_mean_price: Средняя цена за период steam_resample в steam market.
     :param steam_resample: Количество дней, за которое мы ищем среднюю стоимость предмета на steam market.
@@ -14,7 +14,7 @@ def create_goods_report(
     :return: Строка с информацией о товаре.
     '''
 
-    return f'<b>Оценочная стоимость:</b> {steam_price_cny}\n' \
-           f'<b>Цена 1-го предмета:</b> {sell_min_price}\n' \
-           f'<b>Цена в steam за {steam_resample} дней:</b> {steam_market_mean_price: .2f}\n\n' \
-           f'{buff_goods_url}'
+    return f'<b>📌 Ориентировочная стоимость:</b> {steam_price_cny}\n\n' \
+           f'<b>📌 Цена 1-го предмета:</b> {sell_min_price}\n\n' \
+           f'<b>📌 Цена в steam за {steam_resample} дней:</b> {steam_market_mean_price: .2f}\n\n' \
+           f'<a href="{buff_goods_url}">🔗 Ссылка на предмет</a>'

@@ -1,16 +1,16 @@
 from asyncio import sleep
 
 from data.redis import (
-    PRICE_THRESHOLD_KEY,
-    BUFF_PERCENT_THRESHOLD_KEY,
-    STEAM_PERCENT_THRESHOLD_KEY,
-    STEAM_RESAMPLE_KEY,
-    START_PARSE_KEY
+    PRICE_THRESHOLD_REDIS_KEY,
+    BUFF_PERCENT_THRESHOLD_REDIS_KEY,
+    STEAM_PERCENT_THRESHOLD_REDIS_KEY,
+    STEAM_RESAMPLE_REDIS_KEY,
+    START_PARSE_REDIS_KEY
 )
 
 from data.config import BUFF_SLEEP_TIME
 
-from data.messages import START_PARSE_COMMAND_MESSAGE, STOP_PARSE_COMMAND_MESSAGE
+from data.messages import START_PARSE_COMMAND_MESSAGE
 
 from parsers import buff_parser
 
@@ -30,11 +30,11 @@ async def start_parse_command(message: types.Message, state: FSMContext) -> None
     await bot.send_message(chat_id=user_id, text=START_PARSE_COMMAND_MESSAGE)
 
     async with state.proxy() as data:
-        data[START_PARSE_KEY] = True
-        price_threshold = data[PRICE_THRESHOLD_KEY]
-        buff_percent_threshold = data[BUFF_PERCENT_THRESHOLD_KEY]
-        steam_percent_threshold = data[STEAM_PERCENT_THRESHOLD_KEY]
-        steam_resample = data[STEAM_RESAMPLE_KEY]
+        data[START_PARSE_REDIS_KEY] = True
+        price_threshold = data[PRICE_THRESHOLD_REDIS_KEY]
+        buff_percent_threshold = data[BUFF_PERCENT_THRESHOLD_REDIS_KEY]
+        steam_percent_threshold = data[STEAM_PERCENT_THRESHOLD_REDIS_KEY]
+        steam_resample = data[STEAM_RESAMPLE_REDIS_KEY]
 
     while True:
         stop = await buff_parser(
@@ -47,7 +47,6 @@ async def start_parse_command(message: types.Message, state: FSMContext) -> None
         )
 
         if stop is not None:
-            await bot.send_message(chat_id=user_id, text=STOP_PARSE_COMMAND_MESSAGE)
             break
 
         await sleep(BUFF_SLEEP_TIME)

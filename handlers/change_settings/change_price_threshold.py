@@ -2,7 +2,7 @@ from loader import dp, bot
 
 from data.callbacks import CHANGE_PRICE_THRESHOLD_DATA
 
-from data.redis import LAST_IKB_KEY, PRICE_THRESHOLD_KEY
+from data.redis import LAST_IKB_REDIS_KEY, PRICE_THRESHOLD_REDIS_KEY
 
 from data.messages import (
     CHANGE_PRICE_THRESHOLD_MESSAGE,
@@ -42,7 +42,7 @@ async def enter_price_threshold(message: types.Message, state: FSMContext) -> No
         try:
             price_threshold = float(message.text)
             if price_threshold >= 0:
-                data[PRICE_THRESHOLD_KEY] = price_threshold
+                data[PRICE_THRESHOLD_REDIS_KEY] = price_threshold
                 await bot.send_message(chat_id=user_id, text=SUCCESSFULLY_SAVE_PRICE_THRESHOLD_MESSAGE)
             else:
                 await bot.send_message(chat_id=user_id, text=ERROR_SAVE_PRICE_THRESHOLD_MESSAGE)
@@ -55,6 +55,6 @@ async def enter_price_threshold(message: types.Message, state: FSMContext) -> No
             reply_markup=change_settings_ikb()
         )
 
-        data[LAST_IKB_KEY] = msg.message_id
+        data[LAST_IKB_REDIS_KEY] = msg.message_id
 
     await ChangeSettingsStatesGroup.change_settings.set()

@@ -2,7 +2,7 @@ from loader import dp, bot
 
 from data.callbacks import CHANGE_STEAM_RESAMPLE_DATA
 
-from data.redis import LAST_IKB_KEY, STEAM_RESAMPLE_KEY
+from data.redis import LAST_IKB_REDIS_KEY, STEAM_RESAMPLE_REDIS_KEY
 
 from data.messages import (
     CHANGE_STEAM_RESAMPLE_THRESHOLD_MESSAGE,
@@ -45,7 +45,7 @@ async def enter_steam_resample(message: types.Message, state: FSMContext) -> Non
         try:
             steam_resample = int(message.text)
             if steam_resample > 0:
-                data[STEAM_RESAMPLE_KEY] = steam_resample
+                data[STEAM_RESAMPLE_REDIS_KEY] = steam_resample
                 await bot.send_message(chat_id=user_id, text=SUCCESSFULLY_SAVE_STEAM_RESAMPLE_THRESHOLD_MESSAGE)
             else:
                 await bot.send_message(chat_id=user_id, text=ERROR_SAVE_STEAM_RESAMPLE_THRESHOLD_MESSAGE)
@@ -58,6 +58,6 @@ async def enter_steam_resample(message: types.Message, state: FSMContext) -> Non
             reply_markup=change_settings_ikb()
         )
 
-        data[LAST_IKB_KEY] = msg.message_id
+        data[LAST_IKB_REDIS_KEY] = msg.message_id
 
     await ChangeSettingsStatesGroup.change_settings.set()

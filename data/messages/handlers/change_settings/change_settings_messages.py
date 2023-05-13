@@ -1,16 +1,24 @@
 # CHANGE PRICE THRESHOLD
-CHANGE_PRICE_THRESHOLD_MESSAGE = 'Введите новый ценовой порог'
-SUCCESSFULLY_SAVE_PRICE_THRESHOLD_MESSAGE = 'Новый порог успешно сохранён'
-ERROR_SAVE_PRICE_THRESHOLD_MESSAGE = 'Порог должен быть больше или равен 0'
+CHANGE_PRICE_THRESHOLD_MESSAGE = '✏️ Введите новый ценовой порог.'
+SUCCESSFULLY_SAVE_PRICE_THRESHOLD_MESSAGE = '✅ Новый ценовой порог успешно сохранён.'
+ERROR_SAVE_PRICE_THRESHOLD_MESSAGE = '❗ Ценовой порог должен быть больше или равен 0.'
 # CHANGE BUFF PERCENT THRESHOLD
-CHANGE_BUFF_PERCENT_THRESHOLD_MESSAGE = 'Введите новый buff процент'
-SUCCESSFULLY_SAVE_BUFF_PERCENT_THRESHOLD_MESSAGE = 'Новый buff процент успешно сохранён'
-ERROR_SAVE_BUFF_PERCENT_THRESHOLD_MESSAGE = 'Buff процент должен быть больше или равен 0'
+CHANGE_BUFF_PERCENT_THRESHOLD_MESSAGE = '✏️ Введите новый пороговый процент для BUFF.'
+SUCCESSFULLY_SAVE_BUFF_PERCENT_THRESHOLD_MESSAGE = '✅ Новый пороговый процент для BUFF успешно сохранён.'
+ERROR_SAVE_BUFF_PERCENT_THRESHOLD_MESSAGE = '''
+❗ Пороговый процент для BUFF должен быть больше или равен 0.
+
+Если вы хотите ввести <b>не целое</b> число, то в качестве разделителя будет выступать <b>точка</b>. Например: 77.77
+'''
 # CHANGE STEAM PERCENT THRESHOLD
-CHANGE_STEAM_PERCENT_THRESHOLD_MESSAGE = 'Введите новый steam процент'
-SUCCESSFULLY_SAVE_STEAM_PERCENT_THRESHOLD_MESSAGE = 'Новый steam процент успешно сохранён'
-ERROR_SAVE_STEAM_PERCENT_THRESHOLD_MESSAGE = 'Steam процент должен быть больше или равен 0'
+CHANGE_STEAM_PERCENT_THRESHOLD_MESSAGE = '✏️ Введите новый пороговый процент для Steam.'
+SUCCESSFULLY_SAVE_STEAM_PERCENT_THRESHOLD_MESSAGE = '✅ Новый пороговый процент для Steam успешно сохранён.'
+ERROR_SAVE_STEAM_PERCENT_THRESHOLD_MESSAGE = '''
+❗ Пороговый процент для Steam должен быть больше или равен 0.
+
+Если вы хотите ввести <b>не целое</b> число, то в качестве разделителя будет выступать <b>точка</b>. Например: 77.77
+'''
 # CHANGE STEAM RESAMPLE
-CHANGE_STEAM_RESAMPLE_THRESHOLD_MESSAGE = 'Введите новое количество дней'
-SUCCESSFULLY_SAVE_STEAM_RESAMPLE_THRESHOLD_MESSAGE = 'Новое количество дней успешно сохранёно'
-ERROR_SAVE_STEAM_RESAMPLE_THRESHOLD_MESSAGE = 'Новое количество дней должно быть больше 0'
+CHANGE_STEAM_RESAMPLE_THRESHOLD_MESSAGE = '✏️ Введите новое количество дней для Steam.'
+SUCCESSFULLY_SAVE_STEAM_RESAMPLE_THRESHOLD_MESSAGE = '✅ Новое количество дней для Steam успешно сохранёно.'
+ERROR_SAVE_STEAM_RESAMPLE_THRESHOLD_MESSAGE = '❗ Количество дней для Steam должно быть больше 0.'

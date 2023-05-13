@@ -1,4 +1,4 @@
-from data.redis import LAST_IKB_KEY
+from data.redis import LAST_IKB_REDIS_KEY
 
 from loader import bot
 
@@ -13,8 +13,8 @@ async def keyboards_clear(user_id: int, state: FSMContext) -> None:
     '''
 
     async with state.proxy() as data:
-        if LAST_IKB_KEY in data:
+        if LAST_IKB_REDIS_KEY in data:
             try:
-                await bot.delete_message(chat_id=user_id, message_id=data[LAST_IKB_KEY])
+                await bot.delete_message(chat_id=user_id, message_id=data[LAST_IKB_REDIS_KEY])
             except (MessageToDeleteNotFound, MessageCantBeDeleted):
                 pass

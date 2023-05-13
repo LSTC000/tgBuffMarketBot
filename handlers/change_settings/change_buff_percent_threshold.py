@@ -2,7 +2,7 @@ from loader import dp, bot
 
 from data.callbacks import CHANGE_BUFF_PERCENT_THRESHOLD_DATA
 
-from data.redis import LAST_IKB_KEY, BUFF_PERCENT_THRESHOLD_KEY
+from data.redis import LAST_IKB_REDIS_KEY, BUFF_PERCENT_THRESHOLD_REDIS_KEY
 
 from data.messages import (
     CHANGE_BUFF_PERCENT_THRESHOLD_MESSAGE,
@@ -45,7 +45,7 @@ async def enter_buff_percent_threshold(message: types.Message, state: FSMContext
         try:
             buff_percent_threshold = float(message.text)
             if buff_percent_threshold >= 0:
-                data[BUFF_PERCENT_THRESHOLD_KEY] = buff_percent_threshold
+                data[BUFF_PERCENT_THRESHOLD_REDIS_KEY] = buff_percent_threshold
                 await bot.send_message(chat_id=user_id, text=SUCCESSFULLY_SAVE_BUFF_PERCENT_THRESHOLD_MESSAGE)
             else:
                 await bot.send_message(chat_id=user_id, text=ERROR_SAVE_BUFF_PERCENT_THRESHOLD_MESSAGE)
@@ -58,6 +58,6 @@ async def enter_buff_percent_threshold(message: types.Message, state: FSMContext
             reply_markup=change_settings_ikb()
         )
 
-        data[LAST_IKB_KEY] = msg.message_id
+        data[LAST_IKB_REDIS_KEY] = msg.message_id
 
     await ChangeSettingsStatesGroup.change_settings.set()
