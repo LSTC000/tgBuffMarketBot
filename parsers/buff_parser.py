@@ -6,7 +6,7 @@ from data.urls import BUFF_MARKET_JSON_URL, BUFF_GOODS_URL
 
 from parsers.steam_parser import steam_parser
 
-from utils import create_goods_report
+from utils import create_good_report
 
 from loader import bot, items_cache
 
@@ -57,6 +57,8 @@ async def buff_parser(
             if item_id in items_cache.keys():
                 if items_cache[item_id] == item:
                     continue
+            else:
+                items_cache[item_id] = item
 
             steam_price_cny = float(item.get('goods_info').get('steam_price_cny'))
             if steam_price_cny < price_threshold:
@@ -77,16 +79,28 @@ async def buff_parser(
             if sell_min_price > steam_market_mean_price - (steam_market_mean_price * steam_percent_threshold / 100):
                 continue
 
-            buff_goods_url = BUFF_GOODS_URL.format(item_id)
-            items_cache[item_id] = item
+            icon_url, icon_check = item.get('goods_info').get('icon_url'), True
+            try:
+                async with httpx.AsyncClient() as client:
+                    response = await client.get(url=icon_url, headers=HEADERS, params={'chat_id': user_id})
+                    response.raise_for_status()
+            except (httpx.HTTPError, httpx.RequestError, httpx.TimeoutException):
+                icon_check = False
 
-            await bot.send_message(chat_id=user_id, text=create_goods_report(
-                steam_price_cny=steam_price_cny,
-                sell_min_price=sell_min_price,
-                steam_market_mean_price=steam_market_mean_price,
-                steam_resample=steam_resample,
-                buff_goods_url=buff_goods_url
-            ))
+            buff_good_url = BUFF_GOODS_URL.format(item_id)
+
+            good_name = item.get('name')
+            good_report = create_good_report(
+                    good_name=good_name,
+                    steam_price_cny=steam_price_cny,
+                    sell_min_price=sell_min_price,
+                    buff_good_url=buff_good_url
+                )
+
+            if icon_check:
+                await bot.send_photo(chat_id=user_id, photo=response.content, caption=good_report)
+            else:
+                await bot.send_message(chat_id=user_id, text=good_report)
         except (AttributeError, KeyError):
             pass
 
