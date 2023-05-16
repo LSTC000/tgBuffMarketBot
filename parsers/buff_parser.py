@@ -5,6 +5,7 @@ from data.config import HEADERS
 from data.urls import BUFF_MARKET_JSON_URL, BUFF_GOODS_URL
 
 from parsers.steam_parser import steam_parser
+from parsers.bargain_parser import bargain_parser
 
 from utils import create_good_report
 
@@ -88,13 +89,15 @@ async def buff_parser(
                 icon_check = False
 
             buff_good_url = BUFF_GOODS_URL.format(item_id)
+            lowest_bargain_price = await bargain_parser(user_id=user_id, item_id=item_id)
 
             good_name = item.get('name')
             good_report = create_good_report(
                     good_name=good_name,
-                    steam_price_cny=steam_price_cny,
+                    steam_market_mean_price=steam_market_mean_price,
                     sell_min_price=sell_min_price,
-                    buff_good_url=buff_good_url
+                    buff_good_url=buff_good_url,
+                    lowest_bargain_price=lowest_bargain_price
                 )
 
             if icon_check:

@@ -12,7 +12,7 @@ from data.config import BUFF_SLEEP_TIME
 
 from data.messages import START_PARSE_COMMAND_MESSAGE
 
-from parsers import buff_parser
+from parsers import buff_parser, bargain_parser
 
 from functions import keyboards_clear
 

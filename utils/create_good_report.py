@@ -1,20 +1,27 @@
+from typing import Union
+
+
 def create_good_report(
     good_name: str,
-    steam_price_cny: float,
+    steam_market_mean_price: float,
     sell_min_price: float,
-    buff_good_url: str
+    buff_good_url: str,
+    lowest_bargain_price: Union[float, None]
 ) -> str:
     '''
     :param good_name: Название предмета.
-    :param steam_price_cny: Ориентировочная стоимость.
+    :param steam_market_mean_price: Средняя стоимость предмета в steam market.
     :param sell_min_price: Стоимость 1-го предмета для покупки.
     :param buff_good_url: Ссылка на предмет в Buff.
+    :param lowest_bargain_price: Минимальная цена предмета для торга, если он возможен. Иначе - None.
     :return: Строка с информацией о товаре.
     '''
 
-    clear_steam_price_cny = steam_price_cny * 0.87
+    clear_steam_market_mean_price = steam_market_mean_price * 0.87
+    bargain = f'✅ ({lowest_bargain_price}Y - {sell_min_price}Y)' if lowest_bargain_price is not None else '❌'
 
     return f'Предмет: <a href="{buff_good_url}">{good_name}</a>\n' \
            f'Цена покупки buff: {sell_min_price}Y\n' \
-           f'Цена стим: {steam_price_cny}Y ({clear_steam_price_cny: .2f}Y)\n' \
-           f'Профит ~ {((clear_steam_price_cny - sell_min_price) * 100) / sell_min_price: .2f}%'
+           f'Торговаться: {bargain}\n' \
+           f'Цена стим: {steam_market_mean_price: .2f}Y ({clear_steam_market_mean_price: .2f}Y)\n' \
+           f'Профит ~ {((clear_steam_market_mean_price - sell_min_price) * 100) / sell_min_price: .2f}%'
