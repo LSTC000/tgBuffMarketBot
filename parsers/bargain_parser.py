@@ -28,6 +28,11 @@ async def bargain_parser(user_id: int, item_id: str) -> Union[float, None]:
     try:
         data = response.json()
         item = data.get('data').get('items')[0]
-        return float(item.get('lowest_bargain_price'))
+        item_info = item.get('asset_info').get('info')
+
+        if 'inspect_state' in item_info.keys():
+            return float(item.get('lowest_bargain_price'))
+        else:
+            return None
     except (AttributeError, KeyError):
         return None

@@ -58,6 +58,8 @@ async def buff_parser(
             if item_id in items_cache.keys():
                 if items_cache[item_id] == item:
                     continue
+                else:
+                    items_cache[item_id] = item
             else:
                 items_cache[item_id] = item
 
