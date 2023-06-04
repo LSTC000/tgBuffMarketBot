@@ -2,7 +2,7 @@ from typing import Union
 
 from data.config import HEADERS
 
-from data.urls import BUFF_MARKET_JSON_URL, BUFF_GOODS_URL
+from data.urls import BUFF_MARKET_JSON_URL, BUFF_GOODS_URL, BUFF_ITEM_JSON_URL
 
 from parsers.steam_parser import steam_parser
 from parsers.bargain_parser import bargain_parser
@@ -82,6 +82,27 @@ async def buff_parser(
             if sell_min_price > steam_market_mean_price - (steam_market_mean_price * steam_percent_threshold / 100):
                 continue
 
+            try:
+                async with httpx.AsyncClient() as client:
+                    response = await client.get(
+                        url=BUFF_ITEM_JSON_URL.format(item_id),
+                        headers=HEADERS,
+                        params={'chat_id': user_id}
+                    )
+                    response.raise_for_status()
+                data = response.json()
+            except (httpx.HTTPError, httpx.RequestError, httpx.TimeoutException):
+                data = {}
+
+            if data:
+                paint_wear = data.get('data').get('items')[0].get('asset_info').get('paintwear')
+                if paint_wear:
+                    paint_wear = float(paint_wear)
+                else:
+                    paint_wear = 0
+            else:
+                paint_wear = 0
+
             icon_url, icon_check = item.get('goods_info').get('icon_url'), True
             try:
                 async with httpx.AsyncClient() as client:
@@ -94,9 +115,12 @@ async def buff_parser(
             lowest_bargain_price = await bargain_parser(user_id=user_id, item_id=item_id)
 
             good_name = item.get('name')
+
             good_report = create_good_report(
                     good_name=good_name,
+                    paint_wear=paint_wear,
                     steam_market_mean_price=steam_market_mean_price,
+                    steam_market_count_sell=0,
                     sell_min_price=sell_min_price,
                     buff_good_url=buff_good_url,
                     lowest_bargain_price=lowest_bargain_price
