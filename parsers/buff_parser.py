@@ -63,24 +63,7 @@ async def buff_parser(
             else:
                 items_cache[item_id] = item
 
-            steam_price_cny = float(item.get('goods_info').get('steam_price_cny'))
-            if steam_price_cny < price_threshold:
-                continue
-
-            sell_min_price = float(item.get('sell_min_price'))
-            if sell_min_price > steam_price_cny - (steam_price_cny * buff_percent_threshold / 100):
-                continue
-
             steam_market_url = item.get('steam_market_url')
-            steam_market_mean_price = await steam_parser(
-                user_id=user_id,
-                steam_market_url=steam_market_url,
-                steam_resample=steam_resample
-            )
-            if steam_market_mean_price is None:
-                continue
-            if sell_min_price > steam_market_mean_price - (steam_market_mean_price * steam_percent_threshold / 100):
-                continue
 
             try:
                 async with httpx.AsyncClient() as client:
@@ -90,20 +73,40 @@ async def buff_parser(
                         params={'chat_id': user_id}
                     )
                     response.raise_for_status()
-                data = response.json()
+                item_data = response.json()
+                item_data = item_data.get('data')
             except (httpx.HTTPError, httpx.RequestError, httpx.TimeoutException):
-                data = {}
+                continue
 
-            if data:
-                paint_wear = data.get('data').get('items')[0].get('asset_info').get('paintwear')
-                if paint_wear:
-                    paint_wear = float(paint_wear)
-                else:
-                    paint_wear = 0
+            goods_infos = item_data.get('goods_infos').get(str(item_id))
+            item = item_data.get('items')[0]
+
+            steam_price_cny = float(goods_infos.get('steam_price_cny'))
+            if steam_price_cny < price_threshold:
+                continue
+
+            sell_min_price = float(item.get('price'))
+            if sell_min_price > steam_price_cny - (steam_price_cny * buff_percent_threshold / 100):
+                continue
+
+            steam_market_mean_price, steam_market_count_sell = await steam_parser(
+                user_id=user_id,
+                steam_market_url=steam_market_url,
+                steam_resample=steam_resample
+            )
+
+            if steam_market_mean_price is None:
+                continue
+            if sell_min_price > steam_market_mean_price - (steam_market_mean_price * steam_percent_threshold / 100):
+                continue
+
+            paint_wear = item.get('asset_info').get('paintwear')
+            if paint_wear:
+                paint_wear = float(paint_wear)
             else:
                 paint_wear = 0
 
-            icon_url, icon_check = item.get('goods_info').get('icon_url'), True
+            icon_url, icon_check = goods_infos.get('icon_url'), True
             try:
                 async with httpx.AsyncClient() as client:
                     response = await client.get(url=icon_url, headers=HEADERS, params={'chat_id': user_id})
@@ -112,15 +115,13 @@ async def buff_parser(
                 icon_check = False
 
             buff_good_url = BUFF_GOODS_URL.format(item_id)
-            lowest_bargain_price = await bargain_parser(user_id=user_id, item_id=item_id)
-
-            good_name = item.get('name')
+            lowest_bargain_price = await bargain_parser(user_id=user_id, item=item)
 
             good_report = create_good_report(
-                    good_name=good_name,
+                    good_name=goods_infos.get('name'),
                     paint_wear=paint_wear,
                     steam_market_mean_price=steam_market_mean_price,
-                    steam_market_count_sell=0,
+                    steam_market_count_sell=steam_market_count_sell,
                     sell_min_price=sell_min_price,
                     buff_good_url=buff_good_url,
                     lowest_bargain_price=lowest_bargain_price

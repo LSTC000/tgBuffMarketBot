@@ -17,6 +17,7 @@ ALREADY_STOP_PARSE_COMMAND_MESSAGE = '❗ Парсер <b>уже</b> остан�
 CHANGE_SETTINGS_COMMAND_MESSAGE = '🤖 Выберите, что хотите изменить:'
 NEED_STOP_PARSE_MESSAGE = '❗ Для изменения настроек для начала нужно <b>остановить</b> парсер'
 
+START_SHORT_COMMAND_MESSAGE = 'перезапуск'
 START_PARSE_SHORT_COMMAND_MESSAGE = 'запустить парсер'
 STOP_PARSE_SHORT_COMMAND_MESSAGE = 'остановить парсер'
 CHANGE_SETTINGS_SHORT_COMMAND_MESSAGE = 'изменить настройки'

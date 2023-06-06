@@ -28,6 +28,6 @@ def create_good_report(
            f'Износ: {paint_wear: .8f}\n' \
            f'Цена покупки buff: {sell_min_price}Y\n' \
            f'Цена стим: {steam_market_mean_price: .2f}Y ({clear_steam_market_mean_price: .2f}Y)\n' \
-           f'Профит ~ {((clear_steam_market_mean_price - sell_min_price) * 100) / sell_min_price: .2f}%' \
+           f'Профит ~ {((clear_steam_market_mean_price - sell_min_price) * 100) / sell_min_price: .2f}%\n' \
            f'Количество продаж: {steam_market_count_sell}\n' \
-           f'Торговаться: {bargain}\n'
+           f'Торговаться: {bargain}\n' \
