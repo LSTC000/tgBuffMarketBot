@@ -3,7 +3,7 @@ import json
 from currency_converter import CurrencyConverter
 
 
-def steam_data_prepare(data: str, steam_resample: int) -> tuple[list]:
+def steam_data_prepare(data: str, steam_resample: int) -> tuple:
     '''
     :param data: Строка с данными steam market.
     :param steam_resample: Период за который мы ищем среднюю стоимость предмета на steam market.
