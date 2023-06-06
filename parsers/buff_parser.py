@@ -55,13 +55,14 @@ async def buff_parser(
 
         try:
             item_id = item.get('id')
-            if item_id in items_cache.keys():
-                if items_cache[item_id] == item:
+            if user_id in items_cache.keys():
+                if item_id in items_cache[user_id].keys() and items_cache[user_id][item_id] == item:
                     continue
                 else:
-                    items_cache[item_id] = item
+                    items_cache[user_id][item_id] = item
             else:
-                items_cache[item_id] = item
+                items_cache[user_id] = {}
+                items_cache[user_id][item_id] = item
 
             steam_market_url = item.get('steam_market_url')
 
