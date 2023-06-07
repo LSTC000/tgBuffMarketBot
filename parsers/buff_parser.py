@@ -1,6 +1,6 @@
 from typing import Union
 
-from data.config import HEADERS
+from data.config import HEADERS, COOKIES
 
 from data.urls import BUFF_MARKET_JSON_URL, BUFF_GOODS_URL, BUFF_ITEM_JSON_URL
 
@@ -37,7 +37,12 @@ async def buff_parser(
 
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.get(url=BUFF_MARKET_JSON_URL, headers=HEADERS, params={'chat_id': user_id})
+            response = await client.get(
+                url=BUFF_MARKET_JSON_URL.format(price_threshold),
+                headers=HEADERS,
+                cookies=COOKIES,
+                params={'chat_id': user_id}
+            )
             response.raise_for_status()
     except (httpx.HTTPError, httpx.RequestError, httpx.TimeoutException):
         return None
@@ -81,19 +86,21 @@ async def buff_parser(
                         params={'chat_id': user_id}
                     )
                     response.raise_for_status()
+            except (httpx.HTTPError, httpx.RequestError, httpx.TimeoutException):
+                continue
+
+            try:
                 item_data = response.json()
                 item_data = item_data.get('data')
-            except (httpx.HTTPError, httpx.RequestError, httpx.TimeoutException):
+            except (AttributeError, KeyError):
                 continue
 
             goods_infos = item_data.get('goods_infos').get(str(item_id))
             item = item_data.get('items')[0]
 
             steam_price_cny = float(goods_infos.get('steam_price_cny'))
-            if steam_price_cny < price_threshold:
-                continue
-
             sell_min_price = float(item.get('price'))
+
             if steam_price_cny < sell_min_price + (sell_min_price * buff_percent_threshold / 100):
                 continue
 
