@@ -55,14 +55,21 @@ async def buff_parser(
 
         try:
             item_id = item.get('id')
+            item_cache = [
+                        item,
+                        price_threshold,
+                        buff_percent_threshold,
+                        steam_percent_threshold,
+                        steam_resample
+                    ]
             if user_id in items_cache.keys():
-                if item_id in items_cache[user_id].keys() and items_cache[user_id][item_id] == item:
+                if item_id in items_cache[user_id].keys() and items_cache[user_id][item_id] == item_cache:
                     continue
                 else:
-                    items_cache[user_id][item_id] = item
+                    items_cache[user_id][item_id] = item_cache
             else:
                 items_cache[user_id] = {}
-                items_cache[user_id][item_id] = item
+                items_cache[user_id][item_id] = item_cache
 
             steam_market_url = item.get('steam_market_url')
 
@@ -87,7 +94,7 @@ async def buff_parser(
                 continue
 
             sell_min_price = float(item.get('price'))
-            if sell_min_price > steam_price_cny - (steam_price_cny * buff_percent_threshold / 100):
+            if steam_price_cny < sell_min_price + (sell_min_price * buff_percent_threshold / 100):
                 continue
 
             steam_market_mean_price, steam_market_count_sell = await steam_parser(
@@ -98,7 +105,7 @@ async def buff_parser(
 
             if steam_market_mean_price is None:
                 continue
-            if sell_min_price > steam_market_mean_price - (steam_market_mean_price * steam_percent_threshold / 100):
+            if steam_market_mean_price < sell_min_price + (sell_min_price * steam_percent_threshold / 100):
                 continue
 
             paint_wear = item.get('asset_info').get('paintwear')
