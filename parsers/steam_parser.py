@@ -1,6 +1,6 @@
 import re
 
-from data.config import HEADERS
+from data.config import STEAM_HEADERS
 
 from utils import steam_data_prepare
 
@@ -18,7 +18,7 @@ async def steam_parser(user_id: int, steam_market_url: str, steam_resample: int)
 
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.get(url=steam_market_url, headers=HEADERS, params={'chat_id': user_id})
+            response = await client.get(url=steam_market_url, headers=STEAM_HEADERS, params={'chat_id': user_id})
             response.raise_for_status()
     except (httpx.HTTPError, httpx.RequestError, httpx.TimeoutException):
         return None, None

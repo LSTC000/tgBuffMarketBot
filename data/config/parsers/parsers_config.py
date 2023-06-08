@@ -1,4 +1,13 @@
-HEADERS = {
+from fake_useragent import UserAgent
+
+
+ua = UserAgent()
+
+
+STEAM_HEADERS = {
+    'User-Agent': ua.random
+}
+BUFF_HEADERS = {
     'Accept': 'application/json, text/javascript, */*; q=0.01',
     'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
     'Connection': 'keep-alive',
@@ -10,17 +19,18 @@ HEADERS = {
     'X-Requested-With': 'XMLHttpRequest',
     'sec-ch-ua': '"Opera";v="99", "Chromium";v="113", "Not-A.Brand";v="24"',
     'sec-ch-ua-mobile': '?0',
-    'sec-ch-ua-platform': '"Windows"',
+    'sec-ch-ua-platform': '"Windows"'
 }
-COOKIES = {
+BUFF_COOKIES = {
     'Device-Id': '6RCJfWbDswkX3D6LMc1D',
     'Locale-Supported': 'ru',
     'game': 'csgo',
-    'NTES_YD_SESS': 'jHSQmX_VwXPaqUdrb5mGU6xPH..TobTPfeeIPaZMKmf3T7Ap0cd2FkOIgrqpjLYxOiNVmTZeOwAs2VjTKGrdSkI2nwFY1enOr6JInHwZScnTabR.A2xC7LCGMFfSKM9jGoVXZQ7kfVBNDYPAyVKy8cfQrWu0RiYUYPyN93sMixcCgsyvsPBhLXvE1RJs1juAKb6qyCBpkqpzISG_7x2I8l3q5wnJXHo3Tx9Fxs9XdomZQ',
-    'S_INFO': '1683774105|0|0&60##|7-9612321650',
-    'P_INFO': '7-9612321650|1683774105|1|netease_buff|00&99|null&null&null#RU&null#10#0|&0||7-9612321650',
-    'session': '1-cAt68fUDVarSYZoFal6XCBQ2BLtzSaj0O2xCpPYWDnGF2030364611',
-    'csrf_token': 'Ijk2YWUwZmMwMzM5ZWNkMmJjN2Q1NGFlZjBjY2QxOWFkN2EzYTNmMjki.F2HE7A.gINTUFImjaJa0JT_6xdQ0JVPgBc'
+    'NTES_YD_SESS': 'tXl83fbgj1zxdyXigEUcsJzHl9I1334WO2tQX_scEEHTQwT6Mg0_YXVjgZsGNSxOi0QByFegGHrS1l5GseizOPDXS_3OvzDPlrFrx_XMQwyhx312H7f8bh.1_WnhHYzHsRA0z1SslufjQ89ls4Jszgsr2pxm82xD8B48cP0drJJ286ZNQb5FAkVmHwG0MsUQycnwYCVcukI_3Evt70PpP92TWlcSg8Lv64CdR1FbOf3.b',
+    'S_INFO': '1686228509|0|0&60##|7-9132170674',
+    'P_INFO': '7-9132170674|1686228509|1|netease_buff|00&99|RU&1686065031&netease_buff#RU&null#10#0#0|&0|null|7-9132170674',
+    'remember_me': 'U1105897071|dL7G7DBJESTYejGsxtjsF4iAmDrZyBFz',
+    'session': '1-3OT2r1u8-YYeMsCJ2X2VpWbl1KaGX4BwWdEGKqye6EQ62032417079',
+    'csrf_token': 'IjIyNTlhN2QxZjY0ZWUyOGE0ODM1MGRlOGNlMjA1Nzk0ODZhMmQyNzAi.F2NfuA.RPWoifQ4raK2zP5-Q8PB6pcMTTA'
 }
 
 BUFF_SLEEP_TIME = 3

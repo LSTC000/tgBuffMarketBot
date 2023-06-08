@@ -1,4 +1,4 @@
-__all__ = ['HEADERS', 'COOKIES', 'BUFF_SLEEP_TIME']
+__all__ = ['STEAM_HEADERS', 'BUFF_HEADERS', 'BUFF_COOKIES', 'BUFF_SLEEP_TIME']
 
 
-from .parsers_config import HEADERS, COOKIES, BUFF_SLEEP_TIME
+from .parsers_config import STEAM_HEADERS, BUFF_HEADERS, BUFF_COOKIES, BUFF_SLEEP_TIME

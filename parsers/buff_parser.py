@@ -1,6 +1,6 @@
 from typing import Union
 
-from data.config import HEADERS, COOKIES
+from data.config import BUFF_HEADERS, BUFF_COOKIES
 
 from data.urls import BUFF_MARKET_JSON_URL, BUFF_GOODS_URL, BUFF_ITEM_JSON_URL
 
@@ -39,8 +39,8 @@ async def buff_parser(
         async with httpx.AsyncClient() as client:
             response = await client.get(
                 url=BUFF_MARKET_JSON_URL.format(price_threshold),
-                headers=HEADERS,
-                cookies=COOKIES,
+                headers=BUFF_HEADERS,
+                cookies=BUFF_COOKIES,
                 params={'chat_id': user_id}
             )
             response.raise_for_status()
@@ -82,7 +82,7 @@ async def buff_parser(
                 async with httpx.AsyncClient() as client:
                     response = await client.get(
                         url=BUFF_ITEM_JSON_URL.format(item_id),
-                        headers=HEADERS,
+                        headers=BUFF_HEADERS,
                         params={'chat_id': user_id}
                     )
                     response.raise_for_status()
@@ -96,7 +96,11 @@ async def buff_parser(
                 continue
 
             goods_infos = item_data.get('goods_infos').get(str(item_id))
-            item = item_data.get('items')[0]
+
+            try:
+                item = item_data.get('items')[0]
+            except IndexError:
+                continue
 
             steam_price_cny = float(goods_infos.get('steam_price_cny'))
             sell_min_price = float(item.get('price'))
@@ -124,7 +128,7 @@ async def buff_parser(
             icon_url, icon_check = goods_infos.get('icon_url'), True
             try:
                 async with httpx.AsyncClient() as client:
-                    response = await client.get(url=icon_url, headers=HEADERS, params={'chat_id': user_id})
+                    response = await client.get(url=icon_url, headers=BUFF_HEADERS, params={'chat_id': user_id})
                     response.raise_for_status()
             except (httpx.HTTPError, httpx.RequestError, httpx.TimeoutException):
                 icon_check = False
