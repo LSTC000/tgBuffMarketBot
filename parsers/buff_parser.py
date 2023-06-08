@@ -1,6 +1,8 @@
+from asyncio import sleep
+
 from typing import Union
 
-from data.config import BUFF_HEADERS, BUFF_COOKIES
+from data.config import BUFF_HEADERS, BUFF_COOKIES, STEAM_SLEEP_TIME
 
 from data.urls import BUFF_MARKET_JSON_URL, BUFF_GOODS_URL, BUFF_ITEM_JSON_URL
 
@@ -113,6 +115,8 @@ async def buff_parser(
                 steam_market_url=steam_market_url,
                 steam_resample=steam_resample
             )
+
+            await sleep(STEAM_SLEEP_TIME)
 
             if steam_market_mean_price is None:
                 continue
