@@ -5,7 +5,9 @@ from data.callbacks import (
     CHANGE_BUFF_PERCENT_THRESHOLD_DATA,
     CHANGE_STEAM_PERCENT_THRESHOLD_DATA,
     CHANGE_STEAM_RESAMPLE_DATA,
-    CLOSE_CHANGE_SETTINGS_DATA
+    CLOSE_CHANGE_SETTINGS_DATA,
+    CHANGE_BUFF_PROXY_DATA,
+    CHANGE_STEAM_PROXY_DATA
 )
 
 from data.messages import (
@@ -13,7 +15,9 @@ from data.messages import (
     CHANGE_BUFF_PERCENT_THRESHOLD_IKB_MESSAGE,
     CHANGE_STEAM_PERCENT_THRESHOLD_IKB_MESSAGE,
     CHANGE_STEAM_RESAMPLE_IKB_MESSAGE,
-    CLOSE_CHANGE_SETTINGS_IKB_MESSAGE
+    CLOSE_CHANGE_SETTINGS_IKB_MESSAGE,
+    CHANGE_BUFF_PROXY_IKB_MESSAGE,
+    CHANGE_STEAM_PROXY_IKB_MESSAGE
 )
 
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
@@ -41,6 +45,14 @@ def change_settings_ikb() -> InlineKeyboardMarkup:
     ikb.row(InlineKeyboardButton(
         text=CHANGE_STEAM_RESAMPLE_IKB_MESSAGE,
         callback_data=CHANGE_STEAM_RESAMPLE_DATA)
+    )
+    ikb.row(InlineKeyboardButton(
+        text=CHANGE_BUFF_PROXY_IKB_MESSAGE,
+        callback_data=CHANGE_BUFF_PROXY_DATA)
+    )
+    ikb.row(InlineKeyboardButton(
+        text=CHANGE_STEAM_PROXY_IKB_MESSAGE,
+        callback_data=CHANGE_STEAM_PROXY_DATA)
     )
     ikb.row(InlineKeyboardButton(
         text=CLOSE_CHANGE_SETTINGS_IKB_MESSAGE,

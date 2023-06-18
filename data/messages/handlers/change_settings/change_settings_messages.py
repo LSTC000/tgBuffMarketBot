@@ -22,3 +22,11 @@ ERROR_SAVE_STEAM_PERCENT_THRESHOLD_MESSAGE = '''
 CHANGE_STEAM_RESAMPLE_THRESHOLD_MESSAGE = '✏️ Введите новое количество дней для Steam'
 SUCCESSFULLY_SAVE_STEAM_RESAMPLE_THRESHOLD_MESSAGE = '✅ Новое количество дней для Steam успешно сохранёно'
 ERROR_SAVE_STEAM_RESAMPLE_THRESHOLD_MESSAGE = '❗ Количество дней для Steam должно быть больше 0'
+# CHANGE BUFF PROXY
+CHANGE_BUFF_PROXY_MESSAGE = '✏️ Введите новый прокси для BUFF\n\nТекущий прокси: {}\nВсего прокси: {}'
+SUCCESSFULLY_SAVE_BUFF_PROXY_MESSAGE = '✅ Новое прокси успешно установлено'
+ERROR_SAVE_BUFF_PROXY_MESSAGE = '❗ Новое прокси должно быть <b>целым</b> числом от 0 до {}'
+# CHANGE STEAM PROXY
+CHANGE_STEAM_PROXY_MESSAGE = '✏️ Введите новый прокси для Steam\n\nТекущий прокси: {}\nВсего прокси: {}'
+SUCCESSFULLY_SAVE_STEAM_PROXY_MESSAGE = '✅ Новое прокси успешно установлено'
+ERROR_SAVE_STEAM_PROXY_MESSAGE = '❗ Новое прокси должно быть <b>целым</b> числом от 0 до {}'
