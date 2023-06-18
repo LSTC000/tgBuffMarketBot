@@ -10,7 +10,7 @@ from aiogram.dispatcher.storage import FSMContext
 
 
 async def httpx_response(
-    proxy: Union[str, None],
+    proxy: str,
     proxy_id_redis_key: str,
     url: str,
     headers: dict,
