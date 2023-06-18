@@ -1,5 +1,9 @@
-from fake_useragent import UserAgent
+import os
 
+from fake_useragent import UserAgent
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
 
 ua = UserAgent()
 
@@ -33,5 +37,9 @@ BUFF_COOKIES = {
     'csrf_token': 'IjIyNTlhN2QxZjY0ZWUyOGE0ODM1MGRlOGNlMjA1Nzk0ODZhMmQyNzAi.F2NfuA.RPWoifQ4raK2zP5-Q8PB6pcMTTA'
 }
 
+PROXIES = os.getenv('PROXIES').split(',')
+PROXY_LOGIN = os.getenv('PROXY_LOGIN')
+PROXY_PASSWORD = os.getenv('PROXY_PASSWORD')
+
 BUFF_SLEEP_TIME = 3
-STEAM_SLEEP_TIME = 0.15
+STEAM_SLEEP_TIME = 0.1

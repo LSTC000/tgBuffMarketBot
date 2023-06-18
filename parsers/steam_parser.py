@@ -1,27 +1,44 @@
 import re
 
+from data.redis import STEAM_PROXY_ID_REDIS_KEY
+
+from functions import httpx_response
+
 from data.config import STEAM_HEADERS
 
 from utils import steam_data_prepare
 
-import httpx
+from aiogram.dispatcher.storage import FSMContext
 
 
-async def steam_parser(user_id: int, steam_market_url: str, steam_resample: int) -> tuple:
+async def steam_parser(
+    steam_proxy: str,
+    user_id: int,
+    steam_market_url: str,
+    steam_resample: int,
+    state: FSMContext
+) -> tuple:
     '''
+    :param steam_proxy: steam_proxy.
     :param user_id: Телеграм user id.
     :param steam_market_url: Ссылка на предмет в steam market.
     :param steam_resample: Период за который мы ищем среднюю стоимость предмета на steam market.
-    :return: Средняя цена предмета в steam market за указанный период (steam_resample) и количество проданных предметов.
-        В случае ошибки - None.
+    :param state: FSMContext.
+    :return: Средняя цена предмета в steam market за указанный период (steam_resample), количество проданных предметов
+        и возможно новый прокси. В случае ошибки - None.
     '''
 
-    try:
-        async with httpx.AsyncClient() as client:
-            response = await client.get(url=steam_market_url, headers=STEAM_HEADERS, params={'chat_id': user_id})
-            response.raise_for_status()
-    except (httpx.HTTPError, httpx.RequestError, httpx.TimeoutException):
-        return None, None
+    response, steam_proxy = await httpx_response(
+        proxy=steam_proxy,
+        proxy_id_redis_key=STEAM_PROXY_ID_REDIS_KEY,
+        url=steam_market_url,
+        headers=STEAM_HEADERS,
+        cookies=None,
+        user_id=user_id,
+        state=state
+    )
+    if response is None:
+        return None, None, steam_proxy
 
     try:
         m = re.search(r'var line1=(.+);', response.text)
@@ -35,6 +52,6 @@ async def steam_parser(user_id: int, steam_market_url: str, steam_resample: int)
             if price <= data_price_threshold:
                 new_data_price.append(price)
 
-        return round(sum(new_data_price) / len(new_data_price), 2), sum(data_sell)
+        return round(sum(new_data_price) / len(new_data_price), 2), sum(data_sell), steam_proxy
     except AttributeError:
-        return None, None
+        return None, None, steam_proxy

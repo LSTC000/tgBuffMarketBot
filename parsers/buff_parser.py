@@ -4,7 +4,11 @@ from typing import Union
 
 from data.config import BUFF_HEADERS, BUFF_COOKIES, STEAM_SLEEP_TIME
 
+from data.redis import BUFF_PROXY_ID_REDIS_KEY, BUFF_PROXY_REDIS_KEY, STEAM_PROXY_REDIS_KEY
+
 from data.urls import BUFF_MARKET_JSON_URL, BUFF_GOODS_URL, BUFF_ITEM_JSON_URL
+
+from functions import httpx_response
 
 from parsers.steam_parser import steam_parser
 from parsers.bargain_parser import bargain_parser
@@ -12,8 +16,6 @@ from parsers.bargain_parser import bargain_parser
 from utils import create_good_report
 
 from loader import bot, items_cache
-
-import httpx
 
 from aiogram.dispatcher.storage import FSMContext
 from data.redis import START_PARSE_REDIS_KEY
@@ -33,20 +35,24 @@ async def buff_parser(
     :param buff_percent_threshold: Процентный порог для оценки фактической и наименьшей стоимости предмета.
     :param steam_percent_threshold: Процентный порог для наименьшей и средней на steam market стоимости предмета.
     :param steam_resample: Количество дней, за которое мы ищем среднюю стоимость предмета на steam market.
-    :param state: FSMContext
+    :param state: FSMContext.
     :return: True, если пользователь остановил парсер, иначе - None.
     '''
 
-    try:
-        async with httpx.AsyncClient() as client:
-            response = await client.get(
-                url=BUFF_MARKET_JSON_URL.format(price_threshold),
-                headers=BUFF_HEADERS,
-                cookies=BUFF_COOKIES,
-                params={'chat_id': user_id}
-            )
-            response.raise_for_status()
-    except (httpx.HTTPError, httpx.RequestError, httpx.TimeoutException):
+    async with state.proxy() as data:
+        buff_proxy = data[BUFF_PROXY_REDIS_KEY]
+        steam_proxy = data[STEAM_PROXY_REDIS_KEY]
+
+    response, buff_proxy = await httpx_response(
+        proxy=buff_proxy,
+        proxy_id_redis_key=BUFF_PROXY_ID_REDIS_KEY,
+        url=BUFF_MARKET_JSON_URL.format(price_threshold),
+        headers=BUFF_HEADERS,
+        cookies=BUFF_COOKIES,
+        user_id=user_id,
+        state=state
+    )
+    if response is None:
         return None
 
     try:
@@ -63,12 +69,12 @@ async def buff_parser(
         try:
             item_id = item.get('id')
             item_cache = [
-                        item,
-                        price_threshold,
-                        buff_percent_threshold,
-                        steam_percent_threshold,
-                        steam_resample
-                    ]
+                item,
+                price_threshold,
+                buff_percent_threshold,
+                steam_percent_threshold,
+                steam_resample
+            ]
             if user_id in items_cache.keys():
                 if item_id in items_cache[user_id].keys() and items_cache[user_id][item_id] == item_cache:
                     continue
@@ -80,15 +86,16 @@ async def buff_parser(
 
             steam_market_url = item.get('steam_market_url')
 
-            try:
-                async with httpx.AsyncClient() as client:
-                    response = await client.get(
-                        url=BUFF_ITEM_JSON_URL.format(item_id),
-                        headers=BUFF_HEADERS,
-                        params={'chat_id': user_id}
-                    )
-                    response.raise_for_status()
-            except (httpx.HTTPError, httpx.RequestError, httpx.TimeoutException):
+            response, buff_proxy = await httpx_response(
+                proxy=buff_proxy,
+                proxy_id_redis_key=BUFF_PROXY_ID_REDIS_KEY,
+                url=BUFF_ITEM_JSON_URL.format(item_id),
+                headers=BUFF_HEADERS,
+                cookies=None,
+                user_id=user_id,
+                state=state
+            )
+            if response is None:
                 continue
 
             try:
@@ -110,10 +117,12 @@ async def buff_parser(
             if steam_price_cny < sell_min_price + (sell_min_price * buff_percent_threshold / 100):
                 continue
 
-            steam_market_mean_price, steam_market_count_sell = await steam_parser(
+            steam_market_mean_price, steam_market_count_sell, steam_proxy = await steam_parser(
+                steam_proxy=steam_proxy,
                 user_id=user_id,
                 steam_market_url=steam_market_url,
-                steam_resample=steam_resample
+                steam_resample=steam_resample,
+                state=state
             )
 
             await sleep(STEAM_SLEEP_TIME)
@@ -130,11 +139,17 @@ async def buff_parser(
                 paint_wear = 0
 
             icon_url, icon_check = goods_infos.get('icon_url'), True
-            try:
-                async with httpx.AsyncClient() as client:
-                    response = await client.get(url=icon_url, headers=BUFF_HEADERS, params={'chat_id': user_id})
-                    response.raise_for_status()
-            except (httpx.HTTPError, httpx.RequestError, httpx.TimeoutException):
+
+            response, buff_proxy = await httpx_response(
+                proxy=buff_proxy,
+                proxy_id_redis_key=BUFF_PROXY_ID_REDIS_KEY,
+                url=icon_url,
+                headers=BUFF_HEADERS,
+                cookies=None,
+                user_id=user_id,
+                state=state
+            )
+            if response is None:
                 icon_check = False
 
             buff_good_url = BUFF_GOODS_URL.format(item_id)
